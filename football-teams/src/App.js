@@ -1,9 +1,17 @@
 import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import HomePage from "./pages/HomePage";
+import FavoritesPage from "./pages/FavoritesPage";
+import TeamDetailsPage from "./pages/TeamDetailsPage";
 
 export default function App() {
   return (
-    <div className="bg-green-200 text-center py-10">
-      <h1 className="text-3xl font-bold">Tailwind CSS is Working!</h1>
-    </div>
+    <Router>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/favorites" element={<FavoritesPage />} />
+        <Route path="/team/:id" element={<TeamDetailsPage />} />
+      </Routes>
+    </Router>
   );
 }
