@@ -1,0 +1,8 @@
+steps:
+1 - look for a  convenient API to use. found the *api-football.com* 
+    extensive coverage, rich feature set, and user-friendly documentation.
+    The free plan should suffice for development and testing purposes.
+    Additionally, the availability of live scores and detailed team information aligns well with the project requirements.
+2 - start to implement the basics pages (home-page, favorits, team-details) 
+3 - working with the API
+4 - infinite scrolling
