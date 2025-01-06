@@ -6,3 +6,7 @@ steps:
 2 - start to implement the basics pages (home-page, favorits, team-details) 
 3 - working with the API
 4 - infinite scrolling
+5 - I tried to use the pagination from the API.
+    I read the documentation of the API and realize there is no pagination in the team requests.
+6 - I decided to implament the infinite scrolling by myself in the front.
+    
