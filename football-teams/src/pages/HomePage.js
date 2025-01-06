@@ -1,44 +1,78 @@
 import React, { useState, useEffect } from "react";
 import apiClient from "../services/api";
 
+
 function HomePage() {
-  const [teams, setTeams] = useState([]);           //useState hook to store the teams list
-  const [loading, setLoading] = useState(true);     //check if the data came or still await
+  const [allTeams, setAllTeams] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [displayedTeams, setDisplayedTeams] = useState([]);
+  const [page, setPage] = useState(1);
+  const TEAMS_PER_PAGE = 10;
+
+  const fetchTeams = async () => {
+    try {
+      const response = await apiClient.get("/teams", {
+        params: {
+          league: 39, // Example: Premier League
+          season: 2022, // Example season
+        },
+      });
+      setAllTeams(response.data.response); // Save all teams in state
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching teams:", error);
+    }
+  };
 
   useEffect(() => {
-    const fetchTeams = async () => {
-      try {
-        const response = await apiClient.get("/teams", {   //API call (axios)
-          params: {
-            league: 39,
-            season: 2022,
-          },
-        });
-        setTeams(response.data.response);           //store the teams list
-        setLoading(false);                          //got the data
-      } catch (error) {
-        console.error("Error fetching teams:", error);
+    fetchTeams();
+  }, []);
+
+  useEffect(() => {
+    if (allTeams.length) {
+      const totalTeams = allTeams.length;
+      const startIndex = ((page - 1) * TEAMS_PER_PAGE) % totalTeams; // Loop around
+      const endIndex = (startIndex + TEAMS_PER_PAGE) % totalTeams;
+  
+      if (startIndex < endIndex) {
+        setDisplayedTeams((prev) => [...prev, ...allTeams.slice(startIndex, endIndex)]);
+      } else {
+        // Handle wrapping around to the start of the array
+        setDisplayedTeams((prev) => [
+          ...prev,
+          ...allTeams.slice(startIndex, totalTeams),
+          ...allTeams.slice(0, endIndex),
+        ]);
+      }
+    }
+  }, [page, allTeams]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.innerHeight + document.documentElement.scrollTop >= document.documentElement.offsetHeight - 100) {
+        setPage((prev) => prev + 1); // Trigger next page
       }
     };
-
-    fetchTeams();
-  }, []);                                           //empty dependency array means it runs only once
-
-  if (loading) return <div>Loading teams...</div>;  //  NEED STYLING
+  
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
-    <div className="p-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-      {teams.map((item) => (                        //for loop on the items
-        <div
-          key={item.team.id}
-          className="p-4 bg-white shadow rounded-lg flex items-center"
-        >
-          <img src={item.team.logo} alt={item.team.name} className="h-12 w-12 mr-4" />
-          <h2 className="text-lg font-bold">{item.team.name}</h2>
-        </div>
-      ))}
+    <div className="team-list">
+      {loading ? (
+        <p>Loading teams...</p>
+      ) : (
+        displayedTeams.map((team, index) => (
+          <div key={index} className="team-card">
+            <img src={team.team.logo} alt={team.team.name} />
+            <h3>{team.team.name}</h3>
+          </div>
+        ))
+      )}
     </div>
   );
+ 
 }
 
 export default HomePage;
