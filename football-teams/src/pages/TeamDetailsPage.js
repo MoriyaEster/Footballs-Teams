@@ -22,7 +22,7 @@ function TeamDetailsPage() {
         const playersResponse = await apiClient.get("/players", {
           params: {
             team: id,
-            season: 2022, // Example season, adjust as needed
+            season: 2023, // Example season, adjust as needed
           },
         });
 

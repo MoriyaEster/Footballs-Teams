@@ -8,15 +8,21 @@ function HomePage() {
   const [allTeams, setAllTeams] = useState([]);
   const [loading, setLoading] = useState(true);
   const [displayedTeams, setDisplayedTeams] = useState([]);
+  const [favorites, setFavorites] = useState([]); // For managing favorites
   const [page, setPage] = useState(1);
   const TEAMS_PER_PAGE = 10;
+
+  useEffect(() => {
+    const savedFavorites = JSON.parse(localStorage.getItem("favorites")) || [];
+    setFavorites(savedFavorites);
+  }, []);
 
   const fetchTeams = async () => {
     try {
       const response = await apiClient.get("/teams", {
         params: {
           league: 39, 
-          season: 2022, 
+          season: 2023, 
         },
       });
       setAllTeams(response.data.response); // Save all teams in state
@@ -60,6 +66,16 @@ function HomePage() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const addToFavorites = (team) => {
+    if (!favorites.find((fav) => fav.team.id === team.team.id)) {
+      const updatedFavorites = [...favorites, team];
+      setFavorites(updatedFavorites);
+      localStorage.setItem("favorites", JSON.stringify(updatedFavorites)); // Persist in localStorage
+    } else {
+      alert(`${team.team.name} is already in your favorites!`);
+    }
+  };
+
   return (
     <div className="team-list">
       {loading ? (
@@ -70,6 +86,7 @@ function HomePage() {
             <Link to={`/team/${team.team.id}`}>
               <img src={team.team.logo} alt={team.team.name} />
               <h3>{team.team.name}</h3>
+              <button onClick={() => addToFavorites(team)}>Add to Favorites</button>
             </Link>
           </div>
         ))
