@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import apiClient from "../services/api";
+import { debounce } from "lodash";
 
 
 function HomePage() {
@@ -13,8 +15,8 @@ function HomePage() {
     try {
       const response = await apiClient.get("/teams", {
         params: {
-          league: 39, // Example: Premier League
-          season: 2022, // Example season
+          league: 39, 
+          season: 2022, 
         },
       });
       setAllTeams(response.data.response); // Save all teams in state
@@ -48,11 +50,11 @@ function HomePage() {
   }, [page, allTeams]);
 
   useEffect(() => {
-    const handleScroll = () => {
+    const handleScroll = debounce(() => {
       if (window.innerHeight + document.documentElement.scrollTop >= document.documentElement.offsetHeight - 100) {
-        setPage((prev) => prev + 1); // Trigger next page
+        setPage((prev) => prev + 1);
       }
-    };
+    }, 200); // Debounce with a 200ms delay
   
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
@@ -65,11 +67,14 @@ function HomePage() {
       ) : (
         displayedTeams.map((team, index) => (
           <div key={index} className="team-card">
-            <img src={team.team.logo} alt={team.team.name} />
-            <h3>{team.team.name}</h3>
+            <Link to={`/team/${team.team.id}`}>
+              <img src={team.team.logo} alt={team.team.name} />
+              <h3>{team.team.name}</h3>
+            </Link>
           </div>
         ))
       )}
+      {allTeams.length === 0 && !loading && <p>No teams available.</p>}
     </div>
   );
  
