@@ -38,43 +38,73 @@ function TeamDetailsPage() {
   }, [id]);
 
   if (loading) {
-    return <p>Loading team details...</p>;
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <p className="text-lg font-medium text-gray-600">Loading team details...</p>
+      </div>
+    );
   }
 
   if (!teamDetails) {
-    return <p>No details available for this team.</p>;
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <p className="text-lg font-medium text-red-500">No details available for this team.</p>
+      </div>
+    );
   }
 
   return (
-    <div className="team-details">
+    <div className="p-6 max-w-4xl mx-auto">
       {/* Team Information */}
-      <img src={teamDetails.team.logo} alt={teamDetails.team.name} />
-      <h1>{teamDetails.team.name}</h1>
-      <p><strong>Founded:</strong> {teamDetails.team.founded}</p>
-      <p><strong>Country:</strong> {teamDetails.team.country}</p>
+      <div className="text-center">
+        <img
+          src={teamDetails.team.logo}
+          alt={teamDetails.team.name}
+          className="w-32 h-32 mx-auto mb-4"
+        />
+        <h1 className="text-3xl font-bold text-blue-600 mb-4">{teamDetails.team.name}</h1>
+        <p className="text-gray-600 mb-2">
+          <strong>Founded:</strong> {teamDetails.team.founded || "N/A"}
+        </p>
+        <p className="text-gray-600 mb-6">
+          <strong>Country:</strong> {teamDetails.team.country || "N/A"}
+        </p>
+      </div>
 
       {/* Venue Information */}
       {teamDetails.venue && (
-        <>
-          <h2>Stadium Information</h2>
-          <p><strong>Name:</strong> {teamDetails.venue.name}</p>
-          <p><strong>City:</strong> {teamDetails.venue.city}</p>
-        </>
+        <div className="bg-gray-100 p-6 rounded-lg shadow-md mb-6">
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">Stadium Information</h2>
+          <p className="text-gray-600 mb-2">
+            <strong>Name:</strong> {teamDetails.venue.name || "N/A"}
+          </p>
+          <p className="text-gray-600">
+            <strong>City:</strong> {teamDetails.venue.city || "N/A"}
+          </p>
+        </div>
       )}
 
       {/* Players List */}
-      <h2>Players</h2>
-      {players.length > 0 ? (
-        <ul>
-          {players.map((player, index) => (
-            <li key={index}>
-              {player.player.name} - {player.statistics[0]?.games.position || "N/A"}
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>No players available for this team.</p>
-      )}
+      <div>
+        <h2 className="text-2xl font-semibold text-gray-800 mb-4">Players</h2>
+        {players.length > 0 ? (
+          <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {players.map((player, index) => (
+              <li
+                key={index}
+                className="bg-white p-4 border border-gray-200 rounded-lg shadow-md text-center hover:shadow-lg transition-shadow duration-300"
+              >
+                <p className="font-medium text-gray-800">{player.player.name}</p>
+                <p className="text-sm text-gray-600">
+                  Position: {player.statistics[0]?.games.position || "N/A"}
+                </p>
+              </li>
+            ))}
+          </ul>
+        ) : (
+          <p className="text-gray-600">No players available for this team.</p>
+        )}
+      </div>
     </div>
   );
 }
