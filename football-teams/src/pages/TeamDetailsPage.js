@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import apiClient from "../services/api";
-import { Link } from "react-router-dom";
 
 import grayLike from "/home/moriyaester/Desktop/resume/Footballs-Teams/football-teams/src/pages/gray_like.png";
 import redLike from "/home/moriyaester/Desktop/resume/Footballs-Teams/football-teams/src/pages/red_like.png"; 
@@ -82,28 +81,22 @@ function TeamDetailsPage() {
   }
 
   return (
-    <div
-      className="team-details"
-      style={{
-        backgroundImage: 'url("/assets/stadium_background.jpg")',
-        backgroundSize: "cover",
-        backgroundPosition: "center",
-        minHeight: "100vh",
-        color: "white",
-        textAlign: "center",
-        padding: "20px",
-      }}
-    >
+    <div className="p-6 max-w-4xl mx-auto">
       {/* Team Information */}
-      <h1 style={{ fontSize: "2.5rem", color: "limegreen", marginBottom: "10px" }}>
-        {teamDetails.team.name}
-      </h1>
-      <div style={{ marginBottom: "20px" }}>
+      <div className="text-center">
         <img
           src={teamDetails.team.logo}
           alt={teamDetails.team.name}
-          style={{ borderRadius: "50%", width: "100px", height: "100px", marginBottom: "10px" }}
+          className="w-32 h-32 mx-auto mb-4"
         />
+
+        <h1 className="text-3xl font-bold text-blue-600 mb-4">{teamDetails.team.name}</h1>
+        <p className="text-gray-600 mb-2">
+          <strong>Founded:</strong> {teamDetails.team.founded || "N/A"}
+        </p>
+        <p className="text-gray-600 mb-6">
+          <strong>Country:</strong> {teamDetails.team.country || "N/A"}
+        </p>
         <button
           onClick={toggleFavorite}
           style={{
@@ -120,56 +113,40 @@ function TeamDetailsPage() {
           />
         </button>
       </div>
-      <div style={{ marginBottom: "20px" }}>
-        <p>
-          <strong>Founded:</strong> {teamDetails.team.founded}
-        </p>
-        <p>
-          <strong>Country:</strong> {teamDetails.team.country}
-        </p>
-        {teamDetails.venue && (
-          <>
-            <p>
-              <strong>Stadium:</strong> {teamDetails.venue.name}
-            </p>
-            <p>
-              <strong>City:</strong> {teamDetails.venue.city}
-            </p>
-          </>
-        )}
-      </div>
+
+      {/* Venue Information */}
+      {teamDetails.venue && (
+        <div className="bg-gray-100 p-6 rounded-lg shadow-md mb-6">
+          <h2 className="text-xl font-semibold text-gray-800 mb-4">Stadium Information</h2>
+          <p className="text-gray-600 mb-2">
+            <strong>Name:</strong> {teamDetails.venue.name || "N/A"}
+          </p>
+          <p className="text-gray-600">
+            <strong>City:</strong> {teamDetails.venue.city || "N/A"}
+          </p>
+        </div>
+      )}
 
       {/* Players List */}
-      <h2 style={{ fontSize: "1.5rem", marginBottom: "10px" }}>Players:</h2>
-      <ul style={{ listStyleType: "none", padding: 0 }}>
+      <div>
+        <h2 className="text-2xl font-semibold text-gray-800 mb-4">Players</h2>
         {players.length > 0 ? (
-          players.map((player, index) => (
-            <li key={index} style={{ marginBottom: "5px" }}>
-              {player.player.name} - {player.statistics[0]?.games.position || "N/A"}
-            </li>
-          ))
+          <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {players.map((player, index) => (
+              <li
+                key={index}
+                className="bg-white p-4 border border-gray-200 rounded-lg shadow-md text-center hover:shadow-lg transition-shadow duration-300"
+              >
+                <p className="font-medium text-gray-800">{player.player.name}</p>
+                <p className="text-sm text-gray-600">
+                  Position: {player.statistics[0]?.games.position || "N/A"}
+                </p>
+              </li>
+            ))}
+          </ul>
         ) : (
-          <p>No players available for this team.</p>
+          <p className="text-gray-600">No players available for this team.</p>
         )}
-      </ul>
-
-      {/* Navigation */}
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          position: "absolute",
-          bottom: "20px",
-          width: "100%",
-          padding: "0 20px",
-        }}
-      >
-        <Link to="/favorites" style={{ color: "white", textDecoration: "none" }}>
-          Favorite Teams
-        </Link>
-        <Link to="/" style={{ color: "white", textDecoration: "none" }}>
-          Home
-        </Link>
       </div>
     </div>
   );

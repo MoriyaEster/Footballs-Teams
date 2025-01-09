@@ -87,8 +87,8 @@ function HomePage() {
   };
 
   return (
-    <div className="team-list">
-      <h1 className="text-2xl font-bold text-center mb-6">Team List</h1>
+    <div className="p-10 max-w-7xl mx-auto">
+      <h2 className="text-5xl font-bold text-center text-green-600 mb-6">Football Teams</h2>
       {loading ? (
         <p className="text-center text-gray-600">Loading teams...</p>
       ) : (

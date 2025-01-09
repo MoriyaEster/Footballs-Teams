@@ -19,8 +19,8 @@ function FavoritesPage() {
   };
 
   return (
-    <div className="team-list">
-      <h2 className="text-2xl font-bold text-center mb-6">Your Favorite Teams</h2>
+    <div className="p-10 max-w-7xl mx-auto">
+      <h2 className="text-5xl font-bold text-center text-green-600 mb-6">Favorite Football Teams</h2>
       {favorites.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {favorites.map((team) => (
