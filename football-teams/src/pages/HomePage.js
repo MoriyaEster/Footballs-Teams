@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import apiClient from "../services/api";
 import { debounce } from "lodash";
 
+import grayLike from "/home/moriyaester/Desktop/resume/Footballs-Teams/football-teams/src/pages/gray_like.png";
+import redLike from "/home/moriyaester/Desktop/resume/Footballs-Teams/football-teams/src/pages/red_like.png"; 
 
 function HomePage() {
   const [allTeams, setAllTeams] = useState([]);
@@ -21,8 +23,8 @@ function HomePage() {
     try {
       const response = await apiClient.get("/teams", {
         params: {
-          league: 39, 
-          season: 2023, 
+          league: 39, // Premier League (example)
+          season: 2023, // Adjust the season as necessary
         },
       });
       setAllTeams(response.data.response); // Save all teams in state
@@ -41,7 +43,7 @@ function HomePage() {
       const totalTeams = allTeams.length;
       const startIndex = ((page - 1) * TEAMS_PER_PAGE) % totalTeams; // Loop around
       const endIndex = (startIndex + TEAMS_PER_PAGE) % totalTeams;
-  
+
       if (startIndex < endIndex) {
         setDisplayedTeams((prev) => [...prev, ...allTeams.slice(startIndex, endIndex)]);
       } else {
@@ -61,48 +63,57 @@ function HomePage() {
         setPage((prev) => prev + 1);
       }
     }, 200); // Debounce with a 200ms delay
-  
+
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  const addToFavorites = (team) => {
-    if (!favorites.find((fav) => fav.team.id === team.team.id)) {
-      const updatedFavorites = [...favorites, team];
+  const isFavorite = (team) => {
+    return favorites.some((fav) => fav.team.id === team.team.id);
+  };
+
+  const toggleFavorite = (team) => {
+    if (isFavorite(team)) {
+      // Remove from favorites
+      const updatedFavorites = favorites.filter((fav) => fav.team.id !== team.team.id);
       setFavorites(updatedFavorites);
       localStorage.setItem("favorites", JSON.stringify(updatedFavorites)); // Persist in localStorage
     } else {
-      alert(`${team.team.name} is already in your favorites!`);
+      // Add to favorites
+      const updatedFavorites = [...favorites, team];
+      setFavorites(updatedFavorites);
+      localStorage.setItem("favorites", JSON.stringify(updatedFavorites)); // Persist in localStorage
     }
   };
 
   return (
-    <div className="p-6 max-w-7xl mx-auto">
-      <h1 className="text-5xl font-bold text-green-600 text-center mb-8">Football Teams</h1>
+    <div className="team-list">
+      <h1 className="text-2xl font-bold text-center mb-6">Team List</h1>
       {loading ? (
         <p className="text-center text-gray-600">Loading teams...</p>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {displayedTeams.map((team, index) => (
             <div
               key={index}
-              className="bg-white border border-gray-200 shadow-md rounded-lg p-4 hover:shadow-lg transition-shadow duration-300"
+              className="team-card bg-white rounded-lg shadow-md p-4 text-center"
             >
-              <Link to={`/team/${team.team.id}`} className="block">
+              <Link to={`/team/${team.team.id}`}>
                 <img
                   src={team.team.logo}
                   alt={team.team.name}
-                  className="w-24 h-24 mx-auto mb-4"
+                  className="h-20 w-20 mx-auto mb-4"
                 />
-                <h3 className="text-lg font-medium text-gray-800">
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">
                   {team.team.name}
                 </h3>
               </Link>
-              <button
-                onClick={() => addToFavorites(team)}
-                className="mt-4 w-full bg-blue-500 hover:bg-blue-600 text-white text-sm py-2 rounded-md focus:outline-none focus:ring focus:ring-blue-300"
-              >
-                Add to Favorites
+              <button onClick={() => toggleFavorite(team)} className="focus:outline-none">
+                <img
+                  src={isFavorite(team) ? redLike : grayLike}                  
+                  alt={isFavorite(team) ? "Remove from favorites" : "Add to favorites"}
+                  className="h-8 w-8 mx-auto"
+                />
               </button>
             </div>
           ))}
@@ -113,7 +124,7 @@ function HomePage() {
       )}
     </div>
   );
- 
 }
 
 export default HomePage;
+

@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
+import redLike from "/home/moriyaester/Desktop/resume/Footballs-Teams/football-teams/src/pages/red_like.png";
+
 function FavoritesPage() {
   const [favorites, setFavorites] = useState([]);
 
@@ -10,41 +12,44 @@ function FavoritesPage() {
     setFavorites(savedFavorites);
   }, []);
 
-  const removeFromFavorites = (teamId) => {
-    const updatedFavorites = favorites.filter((team) => team.team.id !== teamId);
+  const removeFromFavorites = (team) => {
+    const updatedFavorites = favorites.filter((fav) => fav.team.id !== team.team.id);
     setFavorites(updatedFavorites);
-    localStorage.setItem("favorites", JSON.stringify(updatedFavorites)); // Update localStorage
+    localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
   };
 
   return (
-    <div className="p-10 max-w-7xl mx-auto">
-      <h2 className="text-5xl font-bold text-center text-green-600 mb-6">Favorite Football Teams</h2>
+    <div className="team-list">
+      <h2 className="text-2xl font-bold text-center mb-6">Your Favorite Teams</h2>
       {favorites.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-9">
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {favorites.map((team) => (
             <div
               key={team.team.id}
-              className="w-80 h-80 bg-none border-gray-200 shadow-md rounded-full flex flex-col items-center"
+              className="team-card bg-white rounded-lg shadow-md p-4 text-center"
             >
-              <Link to={`/team/${team.team.id}`} className="block">
+              <Link to={`/team/${team.team.id}`}>
                 <img
-                  className="w-45 h-45 mx-auto mb-4"
                   src={team.team.logo}
                   alt={team.team.name}
+                  className="h-20 w-20 mx-auto mb-4"
                 />
-                <h3 className="text-lg font-medium text-gray-800">{team.team.name}</h3>
+                <h3 className="text-lg font-semibold text-gray-800 mb-2">
+                  {team.team.name}
+                </h3>
               </Link>
-              <button
-                className="mt-4 bg-red-500 hover:bg-red-600 text-white text-sm px-4 py-2 rounded-md focus:outline-none focus:ring focus:ring-red-300"
-                onClick={() => removeFromFavorites(team.team.id)}
-              >
-                Remove from Favorites
-              </button>
+              {/* Clickable red_like button to remove */}
+              <img
+                src={redLike}
+                alt="remove favorite"
+                className="w-8 h-8 mx-auto cursor-pointer mt-2"
+                onClick={() => removeFromFavorites(team)}
+              />
             </div>
           ))}
         </div>
       ) : (
-        <p className="text-center text-gray-600 text-lg">No favorite teams yet!</p>
+        <p className="text-center text-gray-500">No favorite teams yet!</p>
       )}
     </div>
   );
