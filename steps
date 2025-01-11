@@ -11,4 +11,6 @@ steps:
 6 - I decided to implement the infinite scrolling by myself in the front.
 7 - adding a team detailes
 8 - adding a favorites page with local-store
+9 - working on the styling
+10 - try to showing the user as many different teams as possible on the Home Page 
     
