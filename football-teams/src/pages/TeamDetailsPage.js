@@ -90,7 +90,7 @@ function TeamDetailsPage() {
           className="w-32 h-32 mx-auto mb-4"
         />
 
-        <h1 className="text-3xl font-bold text-blue-600 mb-4">{teamDetails.team.name}</h1>
+        <h1 className="text-5xl font-bold text-center text-green-600 mb-6">{teamDetails.team.name}</h1>
         <p className="text-gray-600 mb-2">
           <strong>Founded:</strong> {teamDetails.team.founded || "N/A"}
         </p>

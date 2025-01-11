@@ -19,12 +19,12 @@ function HomePage() {
     setFavorites(savedFavorites);
   }, []);
 
-  const fetchTeams = async () => {
+  const fetchTeams = async (league, season) => {
     try {
       const response = await apiClient.get("/teams", {
         params: {
-          league: 39, // Premier League (example)
-          season: 2023, // Adjust the season as necessary
+          league: league, 
+          season: season,
         },
       });
       setAllTeams(response.data.response); // Save all teams in state
@@ -35,7 +35,10 @@ function HomePage() {
   };
 
   useEffect(() => {
-    fetchTeams();
+    let league = 35
+    let season = 2021
+    fetchTeams(league, season);
+    league += 1
   }, []);
 
   useEffect(() => {
@@ -90,7 +93,7 @@ function HomePage() {
     <div className="p-10 max-w-7xl mx-auto">
       <h2 className="text-5xl font-bold text-center text-green-600 mb-6">Football Teams</h2>
       {loading ? (
-        <p className="text-center text-gray-600">Loading teams...</p>
+        <p>Loading teams...</p>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {displayedTeams.map((team, index) => (
@@ -120,7 +123,7 @@ function HomePage() {
         </div>
       )}
       {allTeams.length === 0 && !loading && (
-        <p className="text-center text-gray-500">No teams available.</p>
+        <p>No teams available.</p>
       )}
     </div>
   );
