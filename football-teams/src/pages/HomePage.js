@@ -12,7 +12,7 @@ function HomePage() {
   const [displayedTeams, setDisplayedTeams] = useState([]);
   const [favorites, setFavorites] = useState([]); // For managing favorites
   const [page, setPage] = useState(1);
-  const TEAMS_PER_PAGE = 10;
+  const TEAMS_PER_PAGE = 16;
 
   useEffect(() => {
     const savedFavorites = JSON.parse(localStorage.getItem("favorites")) || [];
@@ -51,7 +51,7 @@ function HomePage() {
         setDisplayedTeams((prev) => [
           ...prev,
           ...allTeams.slice(startIndex, totalTeams),
-          ...allTeams.slice(0, endIndex),
+          // ...allTeams.slice(0, endIndex),
         ]);
       }
     }
