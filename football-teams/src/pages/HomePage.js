@@ -10,7 +10,7 @@ function HomePage() {
   const [page, setPage] = useState(1); // Current page number
   const [league, setLeague] = useState(36); // Current league ID being fetched
   const uniqueTeamIds = useRef(new Set()); // Global Set to track unique team IDs
-  const TEAMS_PER_PAGE = 16; // Number of teams per page
+  const TEAMS_PER_PAGE = 24; // Number of teams per page
 
   /**
    * Fetch teams for the given league and add unique teams to the global list.
@@ -89,7 +89,7 @@ function HomePage() {
     <div className="p-10 max-w-7xl mx-auto">
       <h2 className="text-5xl font-bold text-center text-green-600 mb-6">Football Teams</h2>
       {loading ? (
-        <p>Loading teams...</p>
+        <p className="text-3xl mt-3">Loading teams...</p>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
           {displayedTeams.map((team, index) => (
@@ -97,7 +97,7 @@ function HomePage() {
           ))}
         </div>
       )}
-      {allTeams.length === 0 && !loading && <p>No teams available.</p>}
+      {allTeams.length === 0 && !loading && <p className="text-3xl mt-3">No teams available.</p>}
     </div>
   );
 }

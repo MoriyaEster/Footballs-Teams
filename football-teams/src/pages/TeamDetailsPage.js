@@ -24,7 +24,7 @@ function TeamDetailsPage() {
         const playersResponse = await apiClient.get("/players", {
           params: {
             team: id,
-            season: 2023, // Example season, adjust as needed
+            season: 2023,
           },
         });
 
@@ -40,11 +40,11 @@ function TeamDetailsPage() {
   }, [id]);
 
   if (loading) {
-    return <p>Loading team details...</p>;
+    return <p className="text-3xl mt-3">Loading team details...</p>;
   }
 
   if (!teamDetails) {
-    return <p>No details available for this team.</p>;
+    return <p className="text-3xl mt-3">No details available for this team.</p>;
   }
 
   return (
@@ -97,7 +97,7 @@ function TeamDetailsPage() {
             ))}
           </ul>
         ) : (
-          <p className="text-gray-600">No players available for this team.</p>
+          <p className="text-3xl text-gray-600">No players available for this team.</p>
         )}
       </div>
     </div>

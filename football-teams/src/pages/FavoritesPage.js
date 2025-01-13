@@ -21,7 +21,7 @@ function FavoritesPage() {
           ))}
         </div>
       ) : (
-        <p className="text-center text-gray-500">No favorite teams yet!</p>
+        <p className="text-3xl mt-3">No favorite teams yet!</p>
       )}
     </div>
   );
