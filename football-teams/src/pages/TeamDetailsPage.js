@@ -1,74 +1,89 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { debounce } from "lodash";
 import apiClient from "../services/api";
+import TeamCard from "../components/TeamCard";
 
-import Like from "../components/Like";
-
-function TeamDetailsPage() {
-  const { id } = useParams();
-  const [teamDetails, setTeamDetails] = useState(null);
+function HomePage() {
+  const [allTeams, setAllTeams] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [displayedTeams, setDisplayedTeams] = useState([]);
+  const [page, setPage] = useState(1);
+  const [league, setLeague] = useState(36);
+
+  const TEAMS_PER_PAGE = 16;
+
+  const fetchTeams = async (leagueToFetch) => {
+    try {
+      const response = await apiClient.get("/teams", {
+        params: {
+          league: leagueToFetch,
+          season: 2023,
+        },
+      });
+
+      // Deduplicate teams using a Map
+      setAllTeams((prevTeams) => {
+        const teamMap = new Map(prevTeams.map((team) => [team.team.id, team]));
+        response.data.response.forEach((team) => {
+          if (!teamMap.has(team.team.id)) {
+            teamMap.set(team.team.id, team);
+          }
+        });
+        return Array.from(teamMap.values());
+      });
+
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching teams:", error);
+    }
+  };
 
   useEffect(() => {
-    const fetchTeamDetails = async () => {
-      try {
-        const teamResponse = await apiClient.get("/teams", {
-          params: { id },
-        });
+    fetchTeams(league);
+  }, [league]);
 
-        setTeamDetails(teamResponse.data.response[0]);
-      } catch (error) {
-        console.error("Error fetching team details:", error);
-      } finally {
-        setLoading(false);
+  useEffect(() => {
+    if (allTeams.length) {
+      const startIndex = (page - 1) * TEAMS_PER_PAGE;
+      const endIndex = startIndex + TEAMS_PER_PAGE;
+
+      setDisplayedTeams(allTeams.slice(0, endIndex));
+    }
+  }, [page, allTeams]);
+
+  useEffect(() => {
+    const handleScroll = debounce(() => {
+      if (
+        window.innerHeight + document.documentElement.scrollTop >=
+        document.documentElement.offsetHeight - 100
+      ) {
+        if (displayedTeams.length >= allTeams.length) {
+          setLeague((prevLeague) => prevLeague + 1);
+        } else {
+          setPage((prevPage) => prevPage + 1);
+        }
       }
-    };
+    }, 200);
 
-    fetchTeamDetails();
-  }, [id]);
-
-  if (loading) {
-    return <p>Loading team details...</p>;
-  }
-
-  if (!teamDetails) {
-    return <p>No details available for this team.</p>;
-  }
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [allTeams, displayedTeams]);
 
   return (
-    <div className="p-6 max-w-4xl mx-auto">
-      <div className="text-center">
-        <img
-          src={teamDetails.team.logo}
-          alt={teamDetails.team.name}
-          className="w-32 h-32 mx-auto mb-4"
-        />
-
-        <h1 className="text-5xl font-bold text-center text-green-600 mb-6">
-          {teamDetails.team.name}
-        </h1>
-        <p className="text-gray-800 mb-2">
-          <strong>Founded:</strong> {teamDetails.team.founded || "N/A"}
-        </p>
-        <p className="text-gray-800 mb-6">
-          <strong>Country:</strong> {teamDetails.team.country || "N/A"}
-        </p>
-        <Like team={teamDetails} /> 
-      </div>
-
-      {teamDetails.venue && (
-        <div className="bg-gray-100 p-6 rounded-lg shadow-md mb-6">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">Stadium Information</h2>
-          <p className="text-gray-800 mb-2">
-            <strong>Name:</strong> {teamDetails.venue.name || "N/A"}
-          </p>
-          <p className="text-gray-800">
-            <strong>City:</strong> {teamDetails.venue.city || "N/A"}
-          </p>
+    <div className="p-10 max-w-7xl mx-auto">
+      <h2 className="text-5xl font-bold text-center text-green-600 mb-6">Football Teams</h2>
+      {loading ? (
+        <p>Loading teams...</p>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          {displayedTeams.map((team, index) => (
+            <TeamCard key={index} team={team} />
+          ))}
         </div>
       )}
+      {allTeams.length === 0 && !loading && <p>No teams available.</p>}
     </div>
   );
 }
 
-export default TeamDetailsPage;
+export default HomePage;
