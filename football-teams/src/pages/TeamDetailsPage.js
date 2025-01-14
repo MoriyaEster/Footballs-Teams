@@ -24,7 +24,7 @@ function TeamDetailsPage() {
         const playersResponse = await apiClient.get("/players", {
           params: {
             team: id,
-            season: 2023,
+            season: 2021,
           },
         });
 

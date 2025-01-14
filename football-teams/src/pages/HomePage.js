@@ -83,7 +83,7 @@ function HomePage() {
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll); // Cleanup
-  }, [allTeams, displayedTeams]);
+  });
 
   return (
     <div className="p-10 max-w-7xl mx-auto">
