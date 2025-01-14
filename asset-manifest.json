@@ -1,0 +1,17 @@
+{
+  "files": {
+    "main.css": "/Footballs-Teams/static/css/main.ff6f59ff.css",
+    "main.js": "/Footballs-Teams/static/js/main.738544ae.js",
+    "static/js/453.3caff48b.chunk.js": "/Footballs-Teams/static/js/453.3caff48b.chunk.js",
+    "static/media/gray_like.png": "/Footballs-Teams/static/media/gray_like.a1ffb7903c11b23b375d.png",
+    "static/media/red_like.png": "/Footballs-Teams/static/media/red_like.8de5a87d27917b849a66.png",
+    "index.html": "/Footballs-Teams/index.html",
+    "main.ff6f59ff.css.map": "/Footballs-Teams/static/css/main.ff6f59ff.css.map",
+    "main.738544ae.js.map": "/Footballs-Teams/static/js/main.738544ae.js.map",
+    "453.3caff48b.chunk.js.map": "/Footballs-Teams/static/js/453.3caff48b.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.ff6f59ff.css",
+    "static/js/main.738544ae.js"
+  ]
+}
