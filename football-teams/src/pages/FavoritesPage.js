@@ -4,6 +4,7 @@ import TeamCard from "../components/TeamCard";
 function FavoritesPage() {
   const [favorites, setFavorites] = useState([]);
 
+  //retrieves the list of favorite teams from localStorage
   useEffect(() => {
     const savedFavorites = JSON.parse(localStorage.getItem("favorites")) || [];
     setFavorites(savedFavorites);

@@ -1,5 +1,11 @@
 {
   "dependencies": {
     "react-infinite-scroll-component": "^6.1.0"
+  },
+  "scripts": {
+    "dev": "react-scripts start",
+    "build": "parcel build src/index.html",
+    "predeploy": "npm run build",
+    "start": "cd football-teams && npm start"
   }
 }

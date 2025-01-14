@@ -1,29 +1,32 @@
-# Use an official Node.js runtime as a parent image
-FROM node:18-alpine as build
+FROM ubuntu:latest
 
-# Set the working directory in the container
-WORKDIR /app
+RUN mkdir test
 
-# Copy package.json and package-lock.json first for efficient caching
-COPY package.json package-lock.json ./
+RUN apt update && apt install sudo -y
 
-# Install dependencies
-RUN npm install
+RUN useradd -rm -d /home/ubuntu -s /bin/bash -g root -G sudo -u 1000 admin 
 
-# Copy the rest of the application files
-COPY . .
+RUN  echo 'admin:1234' | chpasswd
 
-# Build the React app for production
-RUN npm run build
+RUN mkdir /football-app
 
-# Use a lightweight web server (nginx) to serve the production build
-FROM nginx:alpine
+COPY . /football-app
 
-# Copy the build files from Parcel's output directory to nginx
-COPY --from=build /app/dist /usr/share/nginx/html
+RUN sudo apt-get update -y
 
-# Expose port 80 to allow access to the app
+RUN sudo apt-get install locales -y
+
+RUN sudo apt-get install curl -y
+
+ENV REACT_APP_API_KEY=528d45c9b4d41c33b7b813fbaeda7d25
+
+RUN curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash - &&\ 
+sudo apt-get install -y nodejs
+
+WORKDIR /football-app
+
+RUN npm i
+
 EXPOSE 3000
 
-# Start nginx server
-CMD ["nginx", "-g", "daemon off;"]
+CMD npm run start

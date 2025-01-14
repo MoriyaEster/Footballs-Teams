@@ -4,17 +4,16 @@ import apiClient from "../services/api";
 import TeamCard from "../components/TeamCard";
 
 function HomePage() {
-  const [allTeams, setAllTeams] = useState([]); // All unique teams fetched so far
-  const [loading, setLoading] = useState(true); // Loading state
-  const [displayedTeams, setDisplayedTeams] = useState([]); // Teams displayed on the current page
-  const [page, setPage] = useState(1); // Current page number
-  const [league, setLeague] = useState(36); // Current league ID being fetched
-  const uniqueTeamIds = useRef(new Set()); // Global Set to track unique team IDs
-  const TEAMS_PER_PAGE = 24; // Number of teams per page
+  const [allTeams, setAllTeams] = useState([]);               // All unique teams fetched so far
+  const [loading, setLoading] = useState(true);               // Loading state
+  const [displayedTeams, setDisplayedTeams] = useState([]);   // Teams displayed on the current page
+  const [page, setPage] = useState(1);                        // Current page number
+  const [league, setLeague] = useState(36);                   // Current league ID being fetched
+  const uniqueTeamIds = useRef(new Set());                    // Global Set to track unique team IDs
+  const TEAMS_PER_PAGE = 24;                                  // Number of teams per page
 
-  /**
-   * Fetch teams for the given league and add unique teams to the global list.
-   */
+
+  // Fetch teams for the given league and add unique teams to the global list.
   const fetchTeams = async (leagueToFetch) => {
     try {
       const response = await apiClient.get("/teams", {
@@ -26,10 +25,11 @@ function HomePage() {
 
       const newTeams = [];
       response.data.response.forEach((team) => {
-        // Add the team only if it's not already in the Set
+
+        // Add the team only if it's not already in the Set (avoid duplicates)
         if (!uniqueTeamIds.current.has(team.team.id)) {
-          uniqueTeamIds.current.add(team.team.id); // Mark the team ID as added
-          newTeams.push(team); // Add the team to the list of new teams
+          uniqueTeamIds.current.add(team.team.id);
+          newTeams.push(team);
         }
       });
 
@@ -43,9 +43,7 @@ function HomePage() {
     }
   };
 
-  /**
-   * Handle infinite scroll and fetch the next page or league if needed.
-   */
+  // Handle infinite scroll and fetch the next page or league if needed.
   const handleScroll = debounce(() => {
     if (
       window.innerHeight + document.documentElement.scrollTop >=
@@ -57,29 +55,26 @@ function HomePage() {
         setLeague((prevLeague) => prevLeague + 1); // Move to the next league
       }
     }
-  }, 200);
+  }, 200);  // ensures it executed only once during 200 milliseconds
 
-  /**
-   * Load teams whenever the league changes.
-   */
+
+  //Load teams whenever the league changes.
   useEffect(() => {
-    setLoading(true); // Set loading while fetching new league data
+    setLoading(true);
     fetchTeams(league);
   }, [league]);
 
-  /**
-   * Update displayed teams whenever the page or allTeams state changes.
-   */
+
+  //Update displayed teams whenever the page or allTeams state changes.
   useEffect(() => {
     const startIndex = (page - 1) * TEAMS_PER_PAGE;
     const endIndex = startIndex + TEAMS_PER_PAGE;
 
-    setDisplayedTeams(allTeams.slice(0, endIndex)); // Display the next set of teams
+    setDisplayedTeams(allTeams.slice(0, endIndex));
   }, [page, allTeams]);
 
-  /**
-   * Attach the scroll event listener for infinite scrolling.
-   */
+  
+  //Attach the scroll event listener for infinite scrolling.
   useEffect(() => {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll); // Cleanup

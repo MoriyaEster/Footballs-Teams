@@ -1,18 +1,20 @@
 import React, { useState, useEffect } from "react";
 
-import grayLike from "./gray_like.png";
-import redLike from "./red_like.png";
+import grayLike from "./images/gray_like.png";
+import redLike from "./images/red_like.png";
 
 const Like = ({ team }) => {
   const [favorites, setFavorites] = useState([]);
   const [isFavorite, setIsFavorite] = useState(false);
 
+  //check if the team in the favorites list by it id
   useEffect(() => {
     const savedFavorites = JSON.parse(localStorage.getItem("favorites")) || [];
     setFavorites(savedFavorites);
     setIsFavorite(savedFavorites.some((fav) => fav.team.id === team.team.id));
   }, [team]);
 
+  //Adds or removes the current team from the favorites list.
   const toggleFavorite = () => {
     const updatedFavorites = isFavorite
       ? favorites.filter((fav) => fav.team.id !== team.team.id)
