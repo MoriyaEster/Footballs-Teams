@@ -1,16 +1,13 @@
-steps:
-1 - look for a  convenient API to use. found the *api-football.com* 
-    extensive coverage, rich feature set, and user-friendly documentation.
-    The free plan should suffice for development and testing purposes.
-    Additionally, the availability of live scores and detailed team information aligns well with the project requirements.
-2 - start to implement the basics pages (home-page, favorits, team-details) 
-3 - working with the API
-4 - infinite scrolling
-5 - I tried to use the pagination from the API.
-    I read the documentation of the API and realize there is no pagination in the team requests.
-6 - I decided to implement the infinite scrolling by myself in the front.
-7 - adding a team detailes
-8 - adding a favorites page with local-store
-9 - working on the styling
-10 - try to showing the user as many different teams as possible on the Home Page 
-    
+Development Steps for the Football Teams Application:
+----------------------------------------------------
+1. Select API: Chose api-football.com for its rich features, free plan, and alignment with project needs.
+2. Basic Pages: Built Home, Favorites, and Team Details pages to structure the app.
+3. API Integration: Connected the app to api-football.com to fetch football team data.
+4. Infinite Scrolling: Implemented dynamic scrolling for the Home Page.
+5. Pagination Issue: Found the API lacks pagination for team requests.
+6. Custom Scrolling: Manually implemented infinite scrolling in the front end.
+7. Team Details: Added a page to show detailed team info.
+8. Favorites with Local Storage: Enabled users to mark and view favorite teams using local storage.
+9. Styling: Used Tailwind CSS for responsive and clean design.
+10. Optimize Team Display: Ensured diverse team data is shown on the Home Page.
+11. Build Docker: Containerized the app with a Dockerfile for easy deployment and scalability.
