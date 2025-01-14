@@ -7,4 +7,5 @@ a simple React application that displays football teams, allows infinite scrolli
 * and start it again with `docker-compose up`
 ---
 
-[image](https://github.com/user-attachments/assets/2d4b85f5-e81e-4fd2-92ed-529e401cbb0e)
+![image](https://github.com/user-attachments/assets/6bf1ba31-00e4-48c4-afcd-f45da4d4cf62)
+
